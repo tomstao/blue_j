@@ -115,7 +115,7 @@ public class Part1 {
                 String currStr = findGene(dna,start);
                 if(currStr== "") break;
                 sr.add(currStr);
-                start = dna.indexOf(currStr) + currStr.length();
+                start = dna.indexOf(currStr, start) + currStr.length();
             };
             return sr;
         };
@@ -129,7 +129,20 @@ public class Part1 {
                     String character = dna.substring(i, i + 1);
                     if(character.equals("C") || character.equals("G")) 
                     cgCounter += 1;
+                }
+                //int indexOfC = dna.indexOf("C");
+                //int indexOfG = dna.indexOf("G");
+                /*while(true){
+                    if(indexOfC == -1) break;
+                    cgCounter += 1;
+                    indexOfC = dna.indexOf("C",indexOfC + 1 );
                 };
+                
+                while(true){
+                    if(indexOfG == -1) break;
+                    cgCounter += 1;
+                    indexOfG = dna.indexOf("G",indexOfC + 1 );
+                };*/
                 
                 float cgRat = cgCounter / dna.length();
                 return cgRat;
@@ -185,17 +198,51 @@ public class Part1 {
             processGenes(test);
             test = getAllGenes(testGene5);
             processGenes(test); */
-            //String testGene5 = "ATGCCGGGTTTAAATGAAATGAATGCGTAG";
-            //StorageResource test = getAllGenes(testGene5);
-            //processGenes(test);
-            FileResource fr = new FileResource("brca1line.fa");
+               // String testGene5 = "ATGCCGGGTTTAAATGAAATGAATGCGTAG";
+            //StorageResource test1 = getAllGenes(testGene5);
+            //processGenes(test1);
+            FileResource fr = new FileResource("GRch38dnapart.fa");
             String dna = fr.asString().toUpperCase();
-            System.out.println(dna);
             StorageResource test = getAllGenes(dna); 
                
-            //System.out.println(findGene(dna,0));
+            System.out.println(test.size() + " genes");
             
             processGenes(test);
             
         };
+        public void test0(){           
+            URLResource fr1 
+            = new URLResource("https://users.cs.duke.edu/~rodger/GRch38dnapart.fa");
+            
+            String dna = fr1.asString().toUpperCase();
+            //System.out.println(dna);
+            StorageResource dnaStr = getAllGenes(dna);
+            int counter = 0;
+            for(String s: dnaStr.data())
+            {
+                counter += 1;
+            };
+            System.out.println(counter);
+        };
+        
+        public void test1() {
+            FileResource fr1 = new FileResource("GRch38dnapart.fa");
+            String dna = fr1.asString().toUpperCase();
+            StorageResource gene = getAllGenes(dna);
+            int stop = 0;
+            int indexCTG = dna.indexOf("CTG"); 
+            
+            while(true)
+            {
+                if(indexCTG == -1) break;
+                stop += 1;
+                indexCTG = dna.indexOf("CTG",indexCTG + 3);
+            };
+            
+            System.out.println("CTG: " + stop);
+            System.out.println(gene.size() + "genes");
+            
+        };
+        
+    
 }
