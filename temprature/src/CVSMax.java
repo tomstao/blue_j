@@ -40,4 +40,42 @@ public class CVSMax extends Main{
     }
 
 
+
+
+    public static CSVRecord coldestHourInFile(CSVParser parser)
+    {
+        CSVRecord theColdestHour = null;
+        for (CSVRecord currentRow : parser) {
+            double currentTemp = Double.parseDouble(currentRow.get("TemperatureF"));
+            if(currentTemp < -999) continue;
+            if (theColdestHour == null) {
+                theColdestHour = currentRow;
+            }
+            double coldestTemp = Double.parseDouble(theColdestHour.get("TemperatureF"));
+            if (coldestTemp > currentTemp) {
+                theColdestHour = currentRow;
+            }
+        }
+        return theColdestHour;
+    }
+
+    public static void testColdestHourInFile()
+    {
+        FileResource fr = new FileResource();
+        CSVParser coldest = fr.getCSVParser();
+        CSVRecord coldestSoFar = coldestHourInFile(coldest);
+        //coldestHourInFile(coldest);
+
+        System.out.println("Coldest Hour:" + coldestSoFar.get("TemperatureF") );
+        System.out.println("The date:" + coldestSoFar.get("DateUTC"));
+    }
+
+    public static String fileWithColdestTemperature()
+    {
+
+
+
+        return "";
+    }
 }
+
