@@ -46,15 +46,17 @@ public class CVSMax extends Main{
     {
         CSVRecord theColdestHour = null;
         for (CSVRecord currentRow : parser) {
-            double currentTemp = Double.parseDouble(currentRow.get("TemperatureF"));
+           double currentTemp = Double.parseDouble(currentRow.get("TemperatureF"));
             if(currentTemp < -999) continue;
+            /*
             if (theColdestHour == null) {
                 theColdestHour = currentRow;
             }
             double coldestTemp = Double.parseDouble(theColdestHour.get("TemperatureF"));
             if (coldestTemp > currentTemp) {
                 theColdestHour = currentRow;
-            }
+            } */
+            theColdestHour = getCodest(theColdestHour, currentRow);
         }
         return theColdestHour;
     }
@@ -70,12 +72,47 @@ public class CVSMax extends Main{
         System.out.println("The date:" + coldestSoFar.get("DateUTC"));
     }
 
+    public static CSVRecord getCodest (CSVRecord theColdestHour, CSVRecord currentRow) {
+
+        double currentTemp = Double.parseDouble(currentRow.get("TemperatureF"));
+        //if(currentTemp < -999) continue;
+        if (theColdestHour == null) {
+            theColdestHour = currentRow;
+        }
+        double coldestTemp = Double.parseDouble(theColdestHour.get("TemperatureF"));
+        if (coldestTemp > currentTemp) {
+            theColdestHour = currentRow;
+        }
+        return theColdestHour;
+    }
+
     public static String fileWithColdestTemperature()
     {
+        DirectoryResource dr = new DirectoryResource();
+        CSVRecord coldestSoFar = null;
+        File coldestF = null;
+        for (File f : dr.selectedFiles()) {
+            FileResource fr = new FileResource(f);
+            CSVParser currParser = fr.getCSVParser();
+            if(coldestSoFar == null)
+            {   coldestSoFar = coldestHourInFile(currParser);
+                coldestF = f;
+                continue;
+            }
+            double currColdest = Double.parseDouble(coldestHourInFile(currParser).get("TemperatureF"));
+            double coldestTempSofar = Double.parseDouble(coldestSoFar.get("TemperatureF"));
 
+            if(currColdest < coldestTempSofar) {
+                coldestSoFar = coldestHourInFile(currParser);
+                coldestF = f;
+            }
+        }
+        return coldestF.getName();
+    }
 
-
-        return "";
+    public static void testFileWithColdestTemperature()
+    {
+        System.out.println(fileWithColdestTemperature());
     }
 }
 
