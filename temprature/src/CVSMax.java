@@ -101,18 +101,36 @@ public class CVSMax extends Main{
             }
             double currColdest = Double.parseDouble(coldestHourInFile(currParser).get("TemperatureF"));
             double coldestTempSofar = Double.parseDouble(coldestSoFar.get("TemperatureF"));
-
+            fr = new FileResource(f);
+            currParser = fr.getCSVParser();
             if(currColdest < coldestTempSofar) {
                 coldestSoFar = coldestHourInFile(currParser);
                 coldestF = f;
             }
         }
-        return coldestF.getName();
+        FileResource fr = new FileResource(coldestF);
+        CSVParser coldest = fr.getCSVParser();
+        coldestSoFar = coldestHourInFile(coldest);
+        String theColdestData = "Coldest day was in file:" + coldestF.getName() + "\n"
+                                + "Coldest temperature on that day was:" + coldestSoFar.get("TemperatureF") + "\n"
+                                +  "All the Temperature on the coldest day were:" + "\n" ;
+        fr = new FileResource(coldestF);
+        coldest = fr.getCSVParser();
+        for (CSVRecord currentRow : coldest) {
+            theColdestData = theColdestData.concat(currentRow.get("DateUTC"))
+                            + ": " + currentRow.get("TemperatureF") + "\n";
+        }
+
+        return theColdestData;
     }
 
     public static void testFileWithColdestTemperature()
     {
         System.out.println(fileWithColdestTemperature());
     }
+
+
+
+
 }
 
