@@ -129,7 +129,29 @@ public class CVSMax extends Main{
         System.out.println(fileWithColdestTemperature());
     }
 
-
+    public static CSVRecord lowestHumidityInFile (CSVParser parser)
+    {
+        CSVRecord lowestHumiditynow = null;
+        for (CSVRecord currentRow : parser) {
+            if (lowestHumiditynow == null) {
+                lowestHumiditynow = currentRow;
+            }
+            double currentHumidity = Double.parseDouble(currentRow.get("Humidity"));
+            double lowestHumidity = Double.parseDouble(lowestHumiditynow.get("Humidity"));
+            if(currentHumidity < lowestHumidity) {
+                lowestHumiditynow = currentRow;
+            }
+        }
+        return lowestHumiditynow;
+    }
+    public static void testLowestHumidityInFile()
+    {
+        FileResource fr = new FileResource();
+        CSVParser parser = fr.getCSVParser();
+        CSVRecord humidity = lowestHumidityInFile(parser);
+        System.out.println("Lowest Humidity:" + humidity.get("Humidity")
+                            + " At:" + humidity.get("DateUTC"));
+    }
 
 
 }
