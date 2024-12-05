@@ -133,6 +133,7 @@ public class CVSMax extends Main{
     {
         CSVRecord lowestHumiditynow = null;
         for (CSVRecord currentRow : parser) {
+            if (currentRow.get("Humidity").equals("N/A")) { continue; }
             if (lowestHumiditynow == null) {
                 lowestHumiditynow = currentRow;
             }
@@ -153,6 +154,36 @@ public class CVSMax extends Main{
                             + " At:" + humidity.get("DateUTC"));
     }
 
+    public static CSVRecord  lowestHumidityInManyFiles()
+    {
+        DirectoryResource dr = new DirectoryResource();
+        CSVRecord lowestHumidity = null;
+        for (File f : dr.selectedFiles()) {
+            FileResource fr = new FileResource(f);
+            CSVParser currParser = fr.getCSVParser();
+            if( lowestHumidity == null) lowestHumidity = lowestHumidityInFile(currParser);
+            fr = new FileResource(f);
+            currParser = fr.getCSVParser();
+            CSVRecord  lowestHumidityNow = lowestHumidityInFile(currParser);
+            double currLowest = Double.parseDouble(lowestHumidityNow.get("Humidity"));
+            double lowestHumidity_D = Double.parseDouble(lowestHumidity.get("Humidity"));
+            if(currLowest < lowestHumidity_D) {
+                lowestHumidity = lowestHumidityNow;
+            }
+        }
 
+        return lowestHumidity;
+    }
+
+
+
+    public static void testLowestHumidityInManyFiles()
+    {
+        CSVRecord lowestHumidity = lowestHumidityInManyFiles();
+
+        System.out.println("Lowest Humidity was:" + lowestHumidity.get("Humidity")
+                            + " At: " + lowestHumidity.get("DateUTC"));
+
+    }
 }
 
