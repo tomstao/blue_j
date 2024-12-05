@@ -72,7 +72,7 @@ public class Export {
         System.out.println(countryInfo(parser, "Nauru"));
         System.out.println("List Two products:");
         parser = fr.getCSVParser();
-        listExportersTwoProducts(parser, "gold", "diamond");
+        listExportersTwoProducts(parser, "cotton", "flowers");
         System.out.println("Big Exporters:");
         parser = fr.getCSVParser();
         bigExporters(parser, "$299,018,000,999");

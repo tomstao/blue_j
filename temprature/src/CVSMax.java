@@ -185,5 +185,67 @@ public class CVSMax extends Main{
                             + " At: " + lowestHumidity.get("DateUTC"));
 
     }
+
+    public static double averageTemperatureInFile (CSVParser parser)
+    {
+        double tempCounter = 0;
+        double sumTemp = 0;
+        double averageTemp;
+        for (CSVRecord currentRow : parser) {
+            double currentTemp = Double.parseDouble(currentRow.get("TemperatureF"));
+            if (currentTemp < -999) continue;
+            tempCounter ++;
+            sumTemp += currentTemp;
+        }
+        averageTemp = sumTemp / tempCounter;
+
+        return averageTemp;
+    }
+
+
+    public static void testAverageTemperatureInFile()
+    {
+        FileResource fr = new FileResource();
+        CSVParser parser = fr.getCSVParser();
+        double averageTemp = averageTemperatureInFile(parser);
+
+        System.out.println("The average temperature in file is: " + averageTemp);
+
+    }
+
+
+
+    public static double averageTemperatureWithHighHumidityInFile (CSVParser parser, int value)
+    {
+        double humiCounter = 0;
+        double tempCounter = 0;
+        double sumTemp = 0;
+        double averageTemp = 0;
+        for (CSVRecord currentRow : parser) {
+            double currentTemp = Double.parseDouble(currentRow.get("TemperatureF"));
+            if (currentTemp < -999) continue;
+            double currentHumi = Double.parseDouble(currentRow.get("Humidity"));
+            if (currentHumi < value) continue;
+            humiCounter += 1;
+            tempCounter += 1;
+            sumTemp += currentTemp;
+
+        }
+        if (humiCounter == 0) return -1;
+        averageTemp = sumTemp / tempCounter;
+        return averageTemp;
+    }
+
+    public static void testAverageTemperatureWithHighHumidityInFile()
+    {
+        int humidity = 80;
+        FileResource fr = new FileResource();
+        CSVParser parser = fr.getCSVParser();
+        double averageTemp = averageTemperatureWithHighHumidityInFile(parser, humidity);
+        if (averageTemp == -1) System.out.println("No temperature with that humidity.");
+        else System.out.println("Average temperature when high humidity is " + averageTemp);
+
+    }
+
 }
 
